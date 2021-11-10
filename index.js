@@ -1,4 +1,4 @@
-import { gql } from "apollo-server";
+import { gql, ApolloServer } from "apollo-server";
 
 const person = [
   {
@@ -234,9 +234,54 @@ const person = [
 ];
 
 const typeDefs = gql`
-type Person{
-  name: String!
+type User{
+  id: ID!
+  name: String
+  username: String!
+  email: String!
+  address: Address
   phone: String
-  str
+  website: String
+  company: Company
+}
+
+type Address {
+  street: String!
+  suite: String!
+  city: String!
+  zipcode: String!
+  geo: Geo
+}
+
+type Geo {
+  lat: String!
+  lng: String!
+}
+
+type Company {
+  name: String!
+  catchPhrase: String!
+  bs: String!
+}
+
+type Query {
+  usersCount: Int!
+  allUsers: [User]!
 }
 `
+
+const resolvers = {
+  Query: {
+    usersCount: () => users.length,
+    allUsers: () => users
+  }
+}
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers
+})
+
+server.listen().then(({ url }) => {
+  console.log(`🚀  Server ready at ${url}`)
+})

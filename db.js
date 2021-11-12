@@ -1,8 +1,9 @@
-export const person = [
+export const users = [
   {
     id: 1,
     name: "Leanne Graham",
     username: "Bret",
+    age: "18",
     email: "Sincere@april.biz",
     address: {
       street: "Kulas Light",

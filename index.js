@@ -1,15 +1,5 @@
-import { gql, ApolloServer } from "apollo-server";
-import { schema } from "./schema";
-import { person } from "./person";
-
-
-
-const resolvers = {
-  Query: {
-    usersCount: () => person.length,
-    allUsers: () => person,
-  },
-};
+import { ApolloServer } from "apollo-server";
+import { typeDefs, resolvers } from "./schema.js";
 
 const server = new ApolloServer({
   typeDefs,

@@ -4,7 +4,7 @@ import { users } from "./db.js";
 export const typeDefs = gql`
   type User {
     id: ID!
-    name: String
+    name: String!
     username: String!
     age: String
     email: String!
@@ -41,6 +41,16 @@ export const typeDefs = gql`
     allUsers: [User]!
     findUser(name: String!): User
   }
+
+  type Mutation {
+    addUser(
+      name: String!
+      username: String!
+      age: String
+      email: String!
+      phone: String
+    ): User
+  }
 `;
 
 export const resolvers = {
@@ -52,6 +62,15 @@ export const resolvers = {
       return users.find(user => user.name === name)
     }
   },
+
+  Mutation: {
+    addUser: (root, args) => {
+      const user = {...args}
+      users.push(user)
+      return user
+    }
+  },
+
   User: {
     isAdult: (root) => root.age >= 18,
     contact: (root) => `${root.phone}, ${root.email}`,

@@ -1,9 +1,14 @@
-import { gql, UserInputError } from "apollo-server";
-import { users } from "./db.js";
-import { v1 as uuid } from "uuid";
-import { PersistedQueryNotSupportedError } from "apollo-server-errors";
+import { gql, UserInputError } from 'apollo-server';
+import { users } from './db.js';
+import { v1 as uuid } from 'uuid';
+import { PersistedQueryNotSupportedError } from 'apollo-server-errors';
 
 export const typeDefs = gql`
+  enum YesNo {
+    YES
+    NO
+  }
+
   type User {
     id: ID!
     name: String!
@@ -40,7 +45,7 @@ export const typeDefs = gql`
 
   type Query {
     usersCount: Int!
-    allUsers: [User]!
+    allUsers(phone: YesNo): [User]!
     findUser(name: String!): User
   }
 
@@ -59,7 +64,15 @@ export const typeDefs = gql`
 export const resolvers = {
   Query: {
     usersCount: () => users.length,
-    allUsers: () => users,
+    allUsers: (root, args) => {
+      if (!args.phone) return users;
+
+      const byPhone = (person) => {
+        args.phone === 'YES' ? person.phone : !person.phone;
+      };
+
+      return users.filter(byPhone);
+    },
     findUser: (root, args) => {
       const { name } = args;
       return users.find((user) => user.name === name);
@@ -69,7 +82,7 @@ export const resolvers = {
   Mutation: {
     addUser: (root, args) => {
       if (users.find((user) => user.name === args.name)) {
-        throw new UserInputError("User already exists", {
+        throw new UserInputError('User already exists', {
           invalidArgs: args.name,
         });
       }
@@ -82,6 +95,6 @@ export const resolvers = {
   User: {
     isAdult: (root) => root.age >= 18,
     contact: (root) => `${root.phone}, ${root.email}`,
-    check: () => "check",
+    check: () => 'check',
   } /* Now we can request the de data contact and check on the query FindUser */,
 };

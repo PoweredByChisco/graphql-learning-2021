@@ -21,6 +21,7 @@
   "homepage": "https://github.com/PoweredByChisco/graphql-learning-2021#readme",
   "dependencies": {
     "apollo-server": "^3.5.0",
-    "graphql": "^15.7.2"
+    "graphql": "^15.7.2",
+    "uuid": "^8.3.2"
   }
 }

@@ -1,6 +1,7 @@
-import { gql } from "apollo-server";
+import { gql, UserInputError } from "apollo-server";
 import { users } from "./db.js";
 import { v1 as uuid } from "uuid";
+import { PersistedQueryNotSupportedError } from "apollo-server-errors";
 
 export const typeDefs = gql`
   type User {
@@ -67,6 +68,11 @@ export const resolvers = {
 
   Mutation: {
     addUser: (root, args) => {
+      if (users.find((user) => user.name === args.name)) {
+        throw new UserInputError("User already exists", {
+          invalidArgs: args.name,
+        });
+      }
       const user = { ...args, id: uuid() };
       users.push(user);
       return user;

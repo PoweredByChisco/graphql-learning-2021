@@ -222,7 +222,6 @@ export const users = [
         lng: '57.2232',
       },
     },
-    phone: '024-648-3804',
     website: 'ambrose.net',
     company: {
       name: 'Hoeger LLC',

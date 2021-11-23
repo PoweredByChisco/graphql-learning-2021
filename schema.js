@@ -9,6 +9,12 @@ export const typeDefs = gql`
     NO
   }
 
+  enum weekdays {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+  }
+
   type User {
     id: ID!
     name: String!
@@ -67,12 +73,11 @@ export const resolvers = {
     allUsers: (root, args) => {
       if (!args.phone) return users;
 
-      const byPhone = (person) => {
-        args.phone === 'YES' ? person.phone : !person.phone;
-      };
+      const byPhone = (user) => (args.phone === "YES" ? user.phone : !user.phone)
 
       return users.filter(byPhone);
     },
+
     findUser: (root, args) => {
       const { name } = args;
       return users.find((user) => user.name === name);
